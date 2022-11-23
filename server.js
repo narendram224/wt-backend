@@ -15,7 +15,7 @@ const app = express();
 
 // uncatchException handle here
 process.on('uncaughtException', (err) => {
-    console.info('Shutting down the server due to uncatch exception', err);
+    console.info('Shutting down the server due to uncaught exception', err);
     process.exit(1);
 });
 
