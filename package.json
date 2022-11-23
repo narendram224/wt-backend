@@ -1,0 +1,32 @@
+{
+    "name": "whatsapp_backend",
+    "version": "1.0.0",
+    "description": "this is whatsapp clone backend with express and mongodb",
+    "main": "server.js",
+    "repository": "https://github.com/narendram224/whatsapp_clone_backend.git",
+    "author": "Narendra",
+    "license": "MIT",
+    "private": false,
+    "scripts": {
+        "start": "NODE_ENV=production node -r esm server.js",
+        "dev": "NODE_ENV=development nodemon -r esm server.js",
+        "prod": "nodemon -r esm server.js",
+        "lintfix": "eslint src --fix --cache"
+    },
+    "devDependencies": {
+        "eslint": "^8.28.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "^2.7.1"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "esm": "^3.2.25",
+        "express": "^4.18.2",
+        "mongoose": "^6.7.2",
+        "socket.io": "^4.5.4",
+        "winston": "^3.8.2",
+        "winston-daily-rotate-file": "^4.7.1"
+    }
+}
