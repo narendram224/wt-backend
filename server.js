@@ -6,16 +6,16 @@ import path from 'path';
 const PORT = process.env.PORT || 3001;
 import consoleLogger from './src/config/consoleLogger';
 const console = consoleLogger(module);
-import { message, room } from './src/routes';
+import { message, room, user } from './src/routes';
 import { SERVER_VERSION } from './src/config';
 import { errorhandler } from './src/middleware';
 // eslint-disable-next-line no-unused-vars
-// import connectDB from './src/config/db.config'; //before uncomment this line you should define mongodb credentials in env
+import connectDB from './src/config/db.config'; //before uncomment this line you should define mongodb credentials in env
 const app = express();
 
 // uncatchException handle here
 process.on('uncaughtException', (err) => {
-    console.info('Shutting down the server due to uncaught exception', err);
+    console.info('Shutting down the server due to uncatch exception', err);
     process.exit(1);
 });
 
@@ -36,6 +36,8 @@ app.get('/', (req, res) => {
 // setup routes
 app.use(baseUrl, message);
 app.use(baseUrl, room);
+app.use(baseUrl, user);
+
 app.use(errorhandler);
 app.use('*', (req, res) => {
     res.status(404).json({ success: false, message: 'URl not found !!' });
