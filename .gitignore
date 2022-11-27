@@ -2,3 +2,5 @@ node_modules
 logs
 yarn.lock
 .env.*
+.env.development
+.env.production

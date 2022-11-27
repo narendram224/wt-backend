@@ -1,5 +1,5 @@
 import express from 'express';
-import { userController } from '../controllers';
+import { consersationController, userController } from '../controllers';
 const router = express.Router();
 // initilize the router
 router
@@ -11,5 +11,6 @@ router
     .get(userController.getSingleUser)
     .patch(userController.updateUser)
     .delete(userController.deleteUser);
+router.route('/user/conversation').post(consersationController.addConversation);
 
 export default router;
