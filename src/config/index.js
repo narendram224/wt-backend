@@ -10,5 +10,6 @@ export const {
     MONGODB_USER_NAME,
     MONGODB_PASSWORD,
     SERVER_VERSION,
+    API_URL,
     DB,
 } = process.env;

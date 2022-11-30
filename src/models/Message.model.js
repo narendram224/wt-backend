@@ -4,15 +4,14 @@ const MessagaSchema = new Schema(
     {
         type: { type: String, default: 'message' },
         message: { type: String, required: [true, 'Messgae is required'] },
-        userName: { type: String, required: [true, 'User name is required'] },
-        userImage: {
-            type: String,
-            default: 'https://joeschmoe.io/api/v1/random',
-        },
-        room: {
+        imageText: { type: String, default: '' },
+        extension: { type: String, default: '' },
+        senderId: { type: String, required: [true, 'User name is required'] },
+        receiverId: { type: String, required: [true, 'User name is required'] },
+        conversationId: {
             type: Schema.Types.ObjectId,
             required: true,
-            ref: 'Room',
+            ref: 'Conversation',
         },
     },
     { timestamps: true }

@@ -1,5 +1,7 @@
 import { catchAsyncError } from '../middleware';
+import Conversation from '../models/Conversation.model';
 import Message from '../models/Message.model';
+import path from 'path';
 import { APIFeature, ErrorHandler } from '../Utills';
 
 const roomController = {
@@ -22,31 +24,42 @@ const roomController = {
     // get all message  api/v1/message/room/:id
     getRoomMessages: catchAsyncError(async (req, res) => {
         const { roomId } = req.params;
-        console.log('room id: ', roomId);
         const resultPerpage = 25;
         const totalCount = await Message.countDocuments();
         const roomsMsgs = new APIFeature(
-            Message.find({ room: roomId }),
+            Message.find({ conversationId: roomId }),
             req.query
         )
             .search()
             .filter()
             .pagination(resultPerpage);
-        const rooms = await roomsMsgs.query;
+        const messages = await roomsMsgs.query;
         res.status(200).json({
             success: true,
-            count: rooms.length,
-            productCount: totalCount,
-            rooms,
+            data: {
+                count: messages.length,
+                productCount: totalCount,
+                messages,
+            },
         });
     }),
 
     // add new message  api/v1/admin/message/new
     addNewMessage: catchAsyncError(async (req, res) => {
-        const message = await Message.create(req.body);
+        const reqMessage = req.body.message;
+        const reqBody = req.body || {};
+        if (req.body.type === 'image') {
+            console.log(path.extname(reqMessage).slice(1));
+            reqBody.extension = path.extname(reqMessage).slice(1);
+        }
+
+        const message = await Message.create(reqBody);
+        await Conversation.findByIdAndUpdate(req.body.conversationId, {
+            message: reqMessage,
+        });
         res.status(200).json({
             success: true,
-            message,
+            data: message,
         });
     }),
 

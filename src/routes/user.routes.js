@@ -12,5 +12,8 @@ router
     .patch(userController.updateUser)
     .delete(userController.deleteUser);
 router.route('/user/conversation').post(consersationController.addConversation);
+router
+    .route('/user/conversation/:senderId/:receiverId')
+    .get(consersationController.getConversation);
 
 export default router;
