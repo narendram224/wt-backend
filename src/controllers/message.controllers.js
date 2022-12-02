@@ -8,11 +8,12 @@ import User from '../models/User.model';
 const roomController = {
     // get all message  api/v1/message
     getMessage: catchAsyncError(async (req, res) => {
-        const resultPerpage = 25;
+        const resultPerpage = 30;
         const totalCount = await Message.countDocuments();
         const roomsInfo = new APIFeature(Message.find(), req.query)
             .search()
             .filter()
+            // .sort('_id', 'descending')
             .pagination(resultPerpage);
         const rooms = await roomsInfo.query;
         res.status(200).json({
@@ -25,8 +26,11 @@ const roomController = {
     // get all message  api/v1/message/room/:id
     getRoomMessages: catchAsyncError(async (req, res) => {
         const { roomId } = req.params;
-        const resultPerpage = 25;
+        const resultPerpage = 20;
         const totalCount = await Message.countDocuments();
+        if (!req.query.page) {
+            req.query.page = `${parseInt(totalCount / resultPerpage)}`;
+        }
         const roomsMsgs = new APIFeature(
             Message.find({ conversationId: roomId }),
             req.query
@@ -47,7 +51,7 @@ const roomController = {
     getLatestMessage: catchAsyncError(async (req, res) => {
         const { roomId } = req.params;
         const message = Message.find({ conversationId: roomId })
-            .sort('_id', 'descending')
+            .sort('_id', 'asc')
             .limit(15);
         res.status(200).json({
             success: true,
@@ -65,9 +69,6 @@ const roomController = {
         }
 
         const message = await Message.create(reqBody);
-        await Conversation.findByIdAndUpdate(req.body.conversationId, {
-            message: reqMessage,
-        });
         await Conversation.findByIdAndUpdate(req.body.conversationId, {
             message: reqMessage,
         });
