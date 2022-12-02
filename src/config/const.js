@@ -3,4 +3,5 @@ export const config = {
     MONGODB_URL: process.env.MONGODB_URL || 'http://localhost:3001',
     MONGODB_USER_NAME: process.env.MONGODB_USER || '',
     MONGODB_PASSWORD: process.env.MONGODB_PASS || '',
+    API_URL: process.env.API_URL || '',
 };

@@ -5,7 +5,6 @@ import { APIFeature, ErrorHandler } from '../Utills';
 const roomController = {
     // get all room  api/v1/room
     getRoom: catchAsyncError(async (req, res) => {
-        console.log('requ', req.originalUrl);
         const resultPerpage = 4;
         const totalCount = await Room.countDocuments();
         const roomsInfo = new APIFeature(Room.find(), req.query)

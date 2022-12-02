@@ -4,8 +4,8 @@ import http from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 const PORT = process.env.PORT || 3001;
-import consoleLogger from './src/config/consoleLogger';
-const console = consoleLogger(module);
+// import consoleLogger from './src/config/consoleLogger';
+// const console = consoleLogger(module);
 import { message, room, user } from './src/routes';
 import { SERVER_VERSION } from './src/config';
 import { errorhandler } from './src/middleware';
@@ -50,19 +50,51 @@ const io = new Server(server, {
         methods: ['GET', 'POST'], //React server
     },
 });
+let users = [];
 
+const addUser = (userInfo, socketId) => {
+    !users.some((user) => user.id === userInfo.id) &&
+        users.push({ ...userInfo, socketId });
+};
+const getUser = (userId) => {
+    return users.find((user) => user.id === userId);
+};
+const removeUser = (socketId) => {
+    users = users.filter((user) => user.socketId !== socketId);
+    return users;
+};
 // socket connection here
 
 io.on('connection', (socket) => {
+    console.log('Connection established', socket.id);
     socket.on('join_room', (room) => {
         socket.join(room);
-        console.room(`User : ${socket.id} joined in this ${room}`);
+        // console.info(`User : ${socket.id} joined in this ${room}`);
     });
-    socket.on('send_message', (message) => {
-        socket.to(message.room).emit('receive_message', message);
+    socket.on('typing', (data) => {
+        if (data.removeTyping) socket.broadcast.emit('typingRemove', data.id);
+        else {
+            socket.broadcast.emit('typingResponse', data.id);
+        }
+    });
+
+    socket.on('sendMessage', (info) => {
+        const user = getUser(info.receiverId);
+        if (user && user.socketId) {
+            io.to(user.socketId).emit('receivedMessage', info);
+        }
+    });
+
+    socket.on('add-user', (userInfo) => {
+        console.log('[Add user Hit]', userInfo.name, socket.id);
+        addUser(userInfo, socket.id);
+        io.emit('get-users', users);
     });
     socket.on('disconnect', () => {
-        console.room(`User disconnect : ${socket.id}`);
+        console.info(`User disconnect : ${socket.id}`);
+        const filterUsers = removeUser(socket.id);
+        //Sends the list of users to the client
+        io.emit('get-users', filterUsers);
     });
 });
 

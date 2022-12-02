@@ -7,25 +7,43 @@ const userController = {
     getUsers: catchAsyncError(async (req, res) => {
         const resultPerpage = 25;
         const totalCount = await User.countDocuments();
-        const roomsInfo = new APIFeature(User.find(), req.query)
+        const userInfo = new APIFeature(User.find(), req.query)
             .search()
             .filter()
             .pagination(resultPerpage);
-        const rooms = await roomsInfo.query;
+
+        const user = await userInfo.query;
         res.status(200).json({
             success: true,
-            count: rooms.length,
-            productCount: totalCount,
-            rooms,
+            error: null,
+            data: {
+                count: user.length,
+                productCount: totalCount,
+                users: user,
+            },
         });
     }),
 
     // add new message  api/v1/admin/message/new
     addNewUser: catchAsyncError(async (req, res) => {
-        const message = await User.create(req.body);
-        res.status(200).json({
+        const doesUserExit = await User.findOne({ id: req.body.id });
+        if (doesUserExit) {
+            res.status(200).json({
+                success: true,
+                error: null,
+                data: {
+                    user: doesUserExit,
+                },
+            });
+            return;
+        }
+        const user = await User.create(req.body);
+        res.status(201).json({
             success: true,
-            message,
+            error: null,
+            data: {
+                user,
+            },
         });
     }),
 
