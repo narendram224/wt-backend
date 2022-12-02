@@ -3,6 +3,7 @@ import Conversation from '../models/Conversation.model';
 import Message from '../models/Message.model';
 import path from 'path';
 import { APIFeature, ErrorHandler } from '../Utills';
+import User from '../models/User.model';
 
 const roomController = {
     // get all message  api/v1/message
@@ -43,6 +44,16 @@ const roomController = {
             },
         });
     }),
+    getLatestMessage: catchAsyncError(async (req, res) => {
+        const { roomId } = req.params;
+        const message = Message.find({ conversationId: roomId })
+            .sort('_id', 'descending')
+            .limit(15);
+        res.status(200).json({
+            success: true,
+            data: message,
+        });
+    }),
 
     // add new message  api/v1/admin/message/new
     addNewMessage: catchAsyncError(async (req, res) => {
@@ -57,6 +68,15 @@ const roomController = {
         await Conversation.findByIdAndUpdate(req.body.conversationId, {
             message: reqMessage,
         });
+        await Conversation.findByIdAndUpdate(req.body.conversationId, {
+            message: reqMessage,
+        });
+        await User.findOneAndUpdate(
+            { id: req.body.receiverId },
+            {
+                lastMessage: reqMessage,
+            }
+        );
         res.status(200).json({
             success: true,
             data: message,

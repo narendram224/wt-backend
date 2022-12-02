@@ -14,6 +14,7 @@ const UserSchema = new Schema(
             required: true,
             unique: true,
         },
+        lastMessage: { type: String, default: '' },
     },
     { timestamps: true }
 );

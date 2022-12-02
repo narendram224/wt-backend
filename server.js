@@ -56,32 +56,45 @@ const addUser = (userInfo, socketId) => {
     !users.some((user) => user.id === userInfo.id) &&
         users.push({ ...userInfo, socketId });
 };
-const getUser = (userInfo) => {
-    // console.log('[get user]', users, userInfo);
-    return users.find((user) => user.id === userInfo);
+const getUser = (userId) => {
+    return users.find((user) => user.id === userId);
 };
-
+const removeUser = (socketId) => {
+    users = users.filter((user) => user.socketId !== socketId);
+    return users;
+};
 // socket connection here
 
 io.on('connection', (socket) => {
-    console.log('Connection established');
+    console.log('Connection established', socket.id);
     socket.on('join_room', (room) => {
         socket.join(room);
         // console.info(`User : ${socket.id} joined in this ${room}`);
     });
-    socket.on('send_message', (data) => {
-        const user = getUser(data.receiverId);
-        console.log('[Data]', user.socketId, data);
-        socket.to(user.socketId).emit('receive_message', data);
+    socket.on('typing', (data) => {
+        if (data.removeTyping) socket.broadcast.emit('typingRemove', data.id);
+        else {
+            socket.broadcast.emit('typingResponse', data.id);
+        }
     });
+
+    socket.on('sendMessage', (info) => {
+        const user = getUser(info.receiverId);
+        if (user && user.socketId) {
+            io.to(user.socketId).emit('receivedMessage', info);
+        }
+    });
+
     socket.on('add-user', (userInfo) => {
-        // console.log('[Add user Hit]', userInfo);
+        console.log('[Add user Hit]', userInfo.name, socket.id);
         addUser(userInfo, socket.id);
-        // socket.to(message.room).emit('receive_message', message);
-        socket.emit('get-users', users);
+        io.emit('get-users', users);
     });
     socket.on('disconnect', () => {
         console.info(`User disconnect : ${socket.id}`);
+        const filterUsers = removeUser(socket.id);
+        //Sends the list of users to the client
+        io.emit('get-users', filterUsers);
     });
 });
 

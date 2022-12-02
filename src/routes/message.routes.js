@@ -8,6 +8,7 @@ router
     .get(messageController.getMessage)
     .post(messageController.addNewMessage);
 router.get('/message/conversation/:roomId', messageController.getRoomMessages);
+router.get('/message/lastMessage/:roomId', messageController.getRoomMessages);
 router
     .route('/message/:id')
     .get(messageController.getSingleMessage)
