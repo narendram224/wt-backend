@@ -8,8 +8,8 @@
     "license": "MIT",
     "private": false,
     "scripts": {
-        "start": "NODE_ENV=production node -r esm server.js",
-        "dev": "NODE_ENV=development nodemon -r esm server.js",
+        "start": "NODE_ENV=production node -r esm index.js",
+        "dev": "NODE_ENV=development nodemon -r esm index.js",
         "prod": "nodemon -r esm server.js",
         "lintfix": "eslint src --fix --cache"
     },
