@@ -66,7 +66,7 @@ const consoleLogger = (callingModule) => {
         transports: [
             new transports.DailyRotateFile({
                 name: 'Info logs',
-                filename: 'logs/info-%DATE%.log',
+                filename: 'projectLogs/info-%DATE%.log',
                 datePattern: 'DD-MMM-YYYY',
                 level: 'info',
                 maxSize: '20m',
@@ -75,7 +75,7 @@ const consoleLogger = (callingModule) => {
             }),
             new transports.DailyRotateFile({
                 name: 'Prod logs',
-                filename: 'logs/product-%DATE%.log',
+                filename: 'projectLogs/product-%DATE%.log',
                 datePattern: 'DD-MMM-YYYY',
                 level: 'debug',
                 maxSize: '10m',
@@ -83,7 +83,7 @@ const consoleLogger = (callingModule) => {
             }),
 
             new transports.DailyRotateFile({
-                filename: 'logs/error-%DATE%.log',
+                filename: 'projectLogs/error-%DATE%.log',
                 datePattern: 'DD-MMM-YYYY',
                 level: 'error',
                 name: 'Error logs',
@@ -92,7 +92,7 @@ const consoleLogger = (callingModule) => {
                 format: format.combine(errorFilter()),
             }),
             new transports.DailyRotateFile({
-                filename: 'logs/room-%DATE%.log',
+                filename: 'projectLogs/room-%DATE%.log',
                 datePattern: 'DD-MMM-YYYY',
                 level: 'room',
                 name: 'Room logs',
@@ -120,8 +120,8 @@ const consoleLogger = (callingModule) => {
         logger.add(
             new transports.DailyRotateFile({
                 name: 'Combined logs',
-                filename: 'logs/server/%DATE%/combined.log',
-                // filename: "logs/combined-%DATE%.log",
+                filename: 'projectLogs/server/%DATE%/combined.log',
+                // filename: "projectLogs/combined-%DATE%.log",
                 level: 'error',
                 datePattern: 'YYYY-MM-DD-HH',
                 maxSize: '20m',
