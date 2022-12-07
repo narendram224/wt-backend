@@ -47,6 +47,8 @@ app.use('*', (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
+        origin: '*',
+        // origin:"https://wt-clone-narendram224nm.vercel.app",
         methods: ['GET', 'POST'], //React server
     },
 });
