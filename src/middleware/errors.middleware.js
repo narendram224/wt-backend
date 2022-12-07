@@ -1,6 +1,6 @@
 import { NODE_ENV } from '../config';
-import consoleLogger from '../config/consoleLogger';
-const logger = consoleLogger(module);
+// import consoleLogger from '../config/consoleLogger';
+// const logger = consoleLogger(module);
 
 import { ErrorHandler } from '../Utills';
 
@@ -9,7 +9,7 @@ export default (err, req, res, next) => {
     err.statusCode = err.statusCode || 200;
     err.message = err.message || 'Internal server error';
     if (NODE_ENV === 'development') {
-        logger.error(
+        console.error(
             `Status code:${err.statusCode} messgae: ${err.message} path: ${req.originalUrl}`
         );
 
@@ -53,8 +53,7 @@ export default (err, req, res, next) => {
             const message = 'Json web token is expired!!!';
             error = new ErrorHandler(message, 400);
         }
-        console.log('Runs', err);
-        logger.error(
+        console.error(
             `Status code:${error.statusCode} messgae: ${error.message} path: ${req.originalUrl}`
         );
 

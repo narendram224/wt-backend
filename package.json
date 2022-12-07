@@ -31,8 +31,6 @@
         "socket.io": "^4.5.4",
         "winston": "^3.8.2",
         "winston-daily-rotate-file": "^4.7.1"
-    },
-    "engines": {
-        "node": "18.x"
-      }
+    }
+    
 }

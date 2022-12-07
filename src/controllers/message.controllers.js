@@ -64,7 +64,6 @@ const roomController = {
         const reqMessage = req.body.message;
         const reqBody = req.body || {};
         if (req.body.type === 'image') {
-            console.log(path.extname(reqMessage).slice(1));
             reqBody.extension = path.extname(reqMessage).slice(1);
         }
 

@@ -10,7 +10,7 @@ import { message, room, user } from './src/routes';
 import { SERVER_VERSION } from './src/config';
 import { errorhandler } from './src/middleware';
 // eslint-disable-next-line no-unused-vars
-import connectDB from './src/config/db.config'; //before uncomment this line you should define mongodb credentials in env
+// import connectDB from './src/config/db.config'; //before uncomment this line you should define mongodb credentials in env
 const app = express();
 
 // uncatchException handle here
@@ -66,7 +66,7 @@ const removeUser = (socketId) => {
 // socket connection here
 
 io.on('connection', (socket) => {
-    console.log('Connection established', socket.id);
+    // console.log('Connection established', socket.id);
     socket.on('join_room', (room) => {
         socket.join(room);
         // console.info(`User : ${socket.id} joined in this ${room}`);
@@ -86,12 +86,12 @@ io.on('connection', (socket) => {
     });
 
     socket.on('add-user', (userInfo) => {
-        console.log('[Add user Hit]', userInfo.name, socket.id);
+        // console.log('[Add user Hit]', userInfo.name, socket.id);
         addUser(userInfo, socket.id);
         io.emit('get-users', users);
     });
     socket.on('disconnect', () => {
-        console.info(`User disconnect : ${socket.id}`);
+        // console.info(`User disconnect : ${socket.id}`);
         const filterUsers = removeUser(socket.id);
         //Sends the list of users to the client
         io.emit('get-users', filterUsers);
