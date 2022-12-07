@@ -10,7 +10,7 @@ import { message, room, user } from './src/routes';
 import { SERVER_VERSION } from './src/config';
 import { errorhandler } from './src/middleware';
 // eslint-disable-next-line no-unused-vars
-// import connectDB from './src/config/db.config'; //before uncomment this line you should define mongodb credentials in env
+import connectDB from './src/config/db.config'; //before uncomment this line you should define mongodb credentials in env
 const app = express();
 
 // uncatchException handle here
